@@ -17,9 +17,7 @@ ENV PATH="${PATH}:/root/.poetry/bin"
 COPY . .
 RUN poetry install --no-root
 
-RUN chown -R www-data $INSTALL_PATH
 
-USER www-data
 EXPOSE 8000
 ENV PYTHONPATH "${PYTHONPATH}:${INSTALL_PATH}"
-CMD ["litestar", "run"]
+CMD ["poetry", "run", "litestar", "run", "--host", "0.0.0.0", "--port", "8000"]
