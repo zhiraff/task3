@@ -13,11 +13,11 @@ RUN echo "Europe/Moscow" > /etc/timezone
 RUN apt update; apt install graphviz graphviz-dev build-essential -y
 # RUN apt -o "Acquire::https::Verify-Peer=false" update ; apt -o "Acquire::https::Verify-Peer=false" install build-essential graphviz graphviz-dev -y
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+ENV PATH="${PATH}:/root/.poetry/bin"
 COPY . .
-RUN poetry install --no-dev
+RUN poetry install --no-root
 
 RUN chown -R www-data $INSTALL_PATH
-# RUN . ./venv/bin/activate
 
 USER www-data
 EXPOSE 8000

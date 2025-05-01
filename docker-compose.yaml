@@ -11,7 +11,7 @@ services:
     env_file:
       - .env-sample
     environment:
-      DB_HOST=db
+      - DB_HOST=db
     links:
       - db
     command: bash -c "
@@ -33,9 +33,9 @@ services:
       - .env-db-sample
     ports:
       - "5432:5432"
-    volumes:
-      - ./config/pg_init:/docker-entrypoint-initdb.d
-      - ./pg_db:/var/lib/postgresql/data
+#    volumes:
+#      - ./config/pg_init:/docker-entrypoint-initdb.d
+#      - ./pg_db:/var/lib/postgresql/data
 
 
   pgadmin:
@@ -46,9 +46,9 @@ services:
       - .env-db-sample
     ports:
       - "5050:80"
-    volumes:
-      - ./pgadmin:/var/lib/pgadmin
-      - ./pg_backups:/tmp
+#    volumes:
+#      - ./pgadmin:/var/lib/pgadmin
+#      - ./pg_backups:/tmp
     depends_on:
       - db
 
