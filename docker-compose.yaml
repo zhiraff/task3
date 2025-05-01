@@ -15,8 +15,8 @@ services:
     links:
       - db
     command: bash -c "
-      litestar database upgrade head --no-prompt
-      && litestar run
+      poetry run litestar database upgrade head --no-prompt
+      && poetry run litestar run --host 0.0.0.0 --port 8000
       "
     ports:
       - '8000:8000'
