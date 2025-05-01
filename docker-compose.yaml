@@ -1,0 +1,58 @@
+version: '3.3'
+services:
+  rest_api:
+    container_name: rest_api
+    networks:
+      - project_default
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env-sample
+    environment:
+      DB_HOST=db
+    links:
+      - db
+    command: bash -c "
+      litestar database upgrade head --no-prompt
+      && litestar run
+      "
+    ports:
+      - '8000:8000'
+    expose:
+      - 8080
+    depends_on:
+      - db
+
+  db:
+    container_name: postgresql_db
+    image: postgres:16.4
+    restart: always
+    env_file:
+      - .env-db-sample
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./config/pg_init:/docker-entrypoint-initdb.d
+      - ./pg_db:/var/lib/postgresql/data
+
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - .env-db-sample
+    ports:
+      - "5050:80"
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+      - ./pg_backups:/tmp
+    depends_on:
+      - db
+
+
+networks:
+  project_default:
+    external: false
