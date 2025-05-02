@@ -2,8 +2,6 @@ version: '3.3'
 services:
   rest_api:
     container_name: rest_api
-    networks:
-      - project_default
     restart: always
     build:
       context: .
@@ -11,9 +9,9 @@ services:
     env_file:
       - .env-sample
     environment:
-      - DB_HOST=db
+      - DB_HOST=litestar_db
     links:
-      - db
+      - litestar_db
     command: bash -c "
       poetry run litestar database upgrade head --no-prompt
       && poetry run litestar run --host 0.0.0.0 --port 8000
@@ -23,10 +21,10 @@ services:
     expose:
       - 8080
     depends_on:
-      - db
+      - litestar_db
 
-  db:
-    container_name: postgresql_db
+  litestar_db:
+    container_name: litestar_db
     image: postgres:16.4
     restart: always
     env_file:
@@ -50,9 +48,4 @@ services:
 #      - ./pgadmin:/var/lib/pgadmin
 #      - ./pg_backups:/tmp
     depends_on:
-      - db
-
-
-networks:
-  project_default:
-    external: false
+      - litestar_db
